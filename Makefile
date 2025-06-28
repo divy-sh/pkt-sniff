@@ -4,12 +4,11 @@ LDFLAGS=-lpcap
 
 all: sniff
 
-sniff: main.o parser.o utils.o
+sniff: main.o parser.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-main.o: main.c parser.h utils.h
+main.o: main.c parser.h
 parser.o: parser.c parser.h
-utils.o: utils.c utils.h
 
 clean:
 	rm -f *.o sniff

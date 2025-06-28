@@ -2,13 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.h"
-#include "utils.h"
 
 #define SNAP_LEN 1518
 
 void packet_handler(u_char *user, const struct pcap_pkthdr *h, const u_char *bytes) {
     packet_info_t info = parse_packet(bytes, h->caplen);
-    print_packet_info(&info);
+    print_packet_info(&info, bytes, h->caplen);
 }
 
 int main(int argc, char *argv[]) {
