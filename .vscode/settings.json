@@ -2,6 +2,8 @@
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
         "pcap.h": "c",
-        "ethernet.h": "c"
+        "ethernet.h": "c",
+        "udp.h": "c",
+        "tcp.h": "c"
     }
 }

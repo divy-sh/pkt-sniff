@@ -62,6 +62,27 @@ packet_info_t parse_packet(const u_char *packet, uint32_t length) {
         info.payload = transport_ptr + tcp_hdr_len;
         info.payload_len = transport_len - tcp_hdr_len;
 
+        u_char *opt = transport_ptr + sizeof(struct tcphdr);
+        
+        while (opt < info.payload) {
+            u_char opt_code = *opt++;
+            u_char opt_len = 0;
+            switch (opt_code)
+            {
+                case 1: //NOP
+                //opt += (opt_len - 2)
+                break;
+                case 0: //EOL
+                case 8: // TS
+                default:
+                opt_len = *opt++;
+                opt += (opt_len - 2);
+                break;
+            }
+
+            printf ("Option code: %d, Option Length: %d\n", opt_code, opt_len);
+        }
+
     } else if (ip_hdr->ip_p == IPPROTO_UDP) {
         if (transport_len < sizeof(struct udphdr)) {
             fprintf(stderr, "Truncated UDP header\n");
@@ -198,7 +219,7 @@ void decode_dns_payload(const u_char *payload, uint32_t len) {
     printf("=== DNS Query ===\n");
     for (int i = 0; i < qdcount && ptr < payload + len; i++) {
         char name[256];
-        int offset = 0, total_len = 0;
+        int total_len = 0;
         while (ptr[0] != 0 && total_len < sizeof(name) - 1 && ptr < payload + len) {
             int label_len = ptr[0];
             if (label_len + total_len >= sizeof(name) - 1 || ptr + label_len >= payload + len) break;
